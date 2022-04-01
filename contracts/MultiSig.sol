@@ -37,9 +37,9 @@ contract MultiSig {
         }
     }
 
-    function getSafesLength() external view returns (uint256) {
-        return safes.length;
-    }
+    // function getSafesLength() external view returns (uint256) {
+    //     return safes.length;
+    // }
 
     function getSafesSigner(uint256 _safeId, uint256 i)
         external
@@ -74,11 +74,17 @@ contract MultiSig {
         _isSigner_ = safe.signers[2] == msg.sender ? true : _isSigner_;
     }
 
-    function _createSafe(address borrower) public onlyOwnerOrContract {
+    function createSafe(address borrower)
+        external
+        onlyOwnerOrContract
+        returns (uint256)
+    {
         uint256 _safeId = safes.length;
         safes.push();
 
         safes[_safeId].signers[0] = borrower;
+
+        return _safeId;
     }
 
     function _sign(uint256 _safeId, address signer)

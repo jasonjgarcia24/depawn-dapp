@@ -68,10 +68,9 @@ contract LoanRequest {
     ) public returns (uint256) {
         require(_collateral != address(0), "Collateral cannot be address 0.");
 
-        uint256 _safeId = multiSig.getSafesLength();
+        // uint256 _safeId = multiSig.getSafesLength();
         uint256 _loanId = loanRequests[msg.sender].length;
-
-        multiSig._createSafe(msg.sender);
+        uint256 _safeId = multiSig.createSafe(msg.sender);
 
         // Append to borrower
         if (_loanId == 0) borrowers.push(msg.sender);
@@ -104,7 +103,6 @@ contract LoanRequest {
         return _loanId;
     }
 
-    
     function withdrawNFT(uint256 _loanId) external {
         onlyHasLoan(msg.sender);
         onlyNotConfirmed(msg.sender, _loanId);
@@ -118,8 +116,6 @@ contract LoanRequest {
             tokenId
         );
     }
-    
-    
 
     function onERC721Received(
         address,
@@ -156,7 +152,7 @@ contract LoanRequest {
         address _borrower,
         uint256 _loanId
     ) external view returns (bool) {
-        console.log(loanRequests[_borrower][_loanId].safeId,_signer);
+        console.log(loanRequests[_borrower][_loanId].safeId, _signer);
         return
             multiSig._getSignStatus(
                 loanRequests[_borrower][_loanId].safeId,
